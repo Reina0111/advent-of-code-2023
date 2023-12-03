@@ -38,8 +38,10 @@ class Solution1
 
     # putting written numbers to result array
     for i in (0..line.length) do
+      next if line[i].to_i > 0
+
       SPELLED_DIGITS.each_with_index do |word, digit|
-        if line[i..line.length].start_with?(word)
+        if line[i..word.length].start_with?(word)
           result_line << [i, digit + 1]
         end
       end
