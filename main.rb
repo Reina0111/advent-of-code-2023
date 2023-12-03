@@ -1,10 +1,10 @@
 Dir.glob("*-day/*.rb").each do |file|
-  require_relative 'first-day/solution'
+  require_relative file
 end
 
-def read_file()
+def read_file(file_name)
   lines = []
-  File.open(FILE_NAME).read.each_line do |line|
+  File.open(file_name).read.each_line do |line|
     lines << line
   end
 

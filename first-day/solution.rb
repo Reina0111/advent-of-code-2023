@@ -1,18 +1,26 @@
-FILE_NAME = "first-day/input.txt"
+FILE_NAME1 = "first-day/input.txt"
+
+def solution1()
+  lines = read_file(FILE_NAME1)
+
+  numbers = lines.map { |line| get_number_from_line(line) }
+
+  numbers.sum
+end
+
+def solution1_part2()
+  lines = read_file(FILE_NAME1)
+
+  numbers = lines.map { |line| get_number_from_line(change_words_to_digits(line)) }
+
+  numbers.sum
+end
 
 def get_number_from_line(line)
   first_digit = line[/\d/]
   last_digit = line.reverse[/\d/]
 
   "#{first_digit}#{last_digit}".to_i
-end
-
-def solution1()
-  lines = read_file()
-
-  numbers = lines.map { |line| get_number_from_line(line) }
-
-  numbers.sum
 end
 
 SPELLED_DIGITS = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
@@ -34,12 +42,4 @@ def change_words_to_digits(line)
   result = result_line.sort.map { |_, number| number }.join
 
   result
-end
-
-def solution1_part2()
-  lines = read_file()
-
-  numbers = lines.map { |line| get_number_from_line(change_words_to_digits(line)) }
-
-  numbers.sum
 end
