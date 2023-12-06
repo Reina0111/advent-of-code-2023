@@ -3,7 +3,7 @@ require_relative "../lib/helper"
 class Solution3
   include Helper
 
-  FILE_NAME = "third-day/input.txt"
+  FILE_NAME = "3rd-day/input.txt"
 
   def solution()
     numbers = {}

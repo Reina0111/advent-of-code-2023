@@ -3,7 +3,7 @@ require_relative "../lib/helper"
 class Solution4
   include Helper
 
-  FILE_NAME = "fourth-day/input.txt"
+  FILE_NAME = "4th-day/input.txt"
 
   def solution()
     games.map { |_id, game| game[:score] = get_game_score_first_part(game) }
