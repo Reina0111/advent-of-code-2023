@@ -4,6 +4,7 @@ class Solution6
   include Helper
 
   FILE_NAME = "6th-day/input.txt"
+  PARTS_SIZE = 10000
 
   def solution()
     data.map { |time, distance| simple_check(time, distance) }.inject(:*)
@@ -51,17 +52,41 @@ class Solution6
 
     possible_wins
   end
+  
+  def find_first_possible_win(time, distance)
+    speed = 1
+    chunk_size = (time / PARTS_SIZE).to_i 
+    while speed < time 
+      time_until_distance = time - speed
 
-  def find_first_possible_win(time, distance)    
-    for speed in (0..time)
+      return find_first_possible_win_close(time, distance, speed - chunk_size) if time_until_distance * speed > distance
+
+      speed += chunk_size
+    end
+  end
+
+  def find_first_possible_win_close(time, distance, starting_speed)    
+    for speed in (starting_speed..time)
       time_until_distance = time - speed
 
       return speed if time_until_distance * speed > distance
     end
   end
-
+  
   def find_last_possible_win(time, distance)
-    speed = time   
+    speed = time
+    chunk_size = (time / PARTS_SIZE).to_i
+    while speed > 0 
+      time_until_distance = time - speed
+
+      return find_last_possible_win_close(time, distance, speed + chunk_size) if time_until_distance * speed > distance
+
+      speed -= chunk_size
+    end
+  end
+
+  def find_last_possible_win_close(time, distance, starting_speed = time)
+    speed = starting_speed   
     while speed > 0
       time_until_distance = time - speed
 
