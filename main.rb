@@ -23,11 +23,9 @@ def main()
     puts ""
     puts "Time statistics (average in #{BENCHMARK_RUNS} runs)"
     for i in (1..24)
-      begin
-        part = Object.const_get("Solution#{i}").new()
-          
-        time1 = Benchmark.realtime { (1..BENCHMARK_RUNS).each { |_| part.solution } } / BENCHMARK_RUNS
-        time2 = Benchmark.realtime { (1..BENCHMARK_RUNS).each { |_| part.solution_part2 } } / BENCHMARK_RUNS
+      begin       
+        time1 = Benchmark.realtime { (1..BENCHMARK_RUNS).each { |_| Object.const_get("Solution#{i}").new().solution } } / BENCHMARK_RUNS
+        time2 = Benchmark.realtime { (1..BENCHMARK_RUNS).each { |_| Object.const_get("Solution#{i}").new().solution_part2 } } / BENCHMARK_RUNS
         puts "Task #{i}: 1st part #{(time1 * 1000).round(2)}ms, 2nd part #{(time2 * 1000).round(2)}ms, total #{((time1 + time2) * 1000).round(2)}ms"
       rescue NameError
         # puts "Solution for day #{i} is not implemented yet"
