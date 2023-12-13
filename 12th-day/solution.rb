@@ -7,10 +7,11 @@ class Solution12
 
   def solution()
     # data.map { |line| count_correct(line) }.sum
-    data2.map { |line| count_by_parts(line) }
+    data2.map { |line| count_by_parts(line) }.sum
   end
 
   def solution_part2()
+    data3.map { |line| count_by_parts(line) }.sum
   end
 
   def data
@@ -45,11 +46,34 @@ class Solution12
 
       {
         view: view,
-        sequence: sequence.split(',').map(&:to_i)
+        sequence: sequence.split(',').map(&:to_i),
+        sequence_regex: "^[\\.]*\#{" + sequence.split(',').join("}[\\.]+\#{") + "}[\\.]*$",
       }
     end
 
     @data
+  end
+
+  def data3
+    return @data3 if @data3
+
+    lines = read_file(FILE_NAME)
+    @data3 = []
+
+    lines.each do |line|
+      view, sequence = line.split(" ")
+
+      el = {
+        view: (view + "?") * 4 + view,
+        sequence: sequence.split(',').map(&:to_i) * 5,
+      }
+
+      el[:sequence_regex] = "^[\\.]*\#{" + el[:sequence].join("}[\\.]+\#{") + "}[\\.]*$",
+
+      @data3 << el
+    end
+
+    @data3
   end
 
   # suuuuper slow, will have to improve it somehow
@@ -86,6 +110,7 @@ class Solution12
   end
 
   def count_by_parts(line)
+    puts line[:view]
     possibilities = []
 
     line[:sequence].each_with_index do |seq, index|
@@ -111,24 +136,47 @@ class Solution12
         end
       end
 
-      possibilities << seq_possibilities
+      possibilities << seq_possibilities.uniq
     end
 
     # mam coś w stylu [["..??##", "....##"], ["..#?##"], ["?.??##"]]
     # potrzebuję teraz z każdego zestawu brać po 1 elemencie i sprawdzać czy taki nowy zestaw nie ma ze sobą sprzeczności i czy się nie najeżdżają przedziały
+    results = []
 
-    puts possibilities[0].to_s
-  end
+    to_check = possibilities[0]
 
-  def combine_possibilities(possibilities, length)
-    result = 0
-
-    for i in (0..length-1) do
-      common = possibilities.map { |p| p[2] }.reject { |l| l == "?" }.uniq
-
-      result += 1 if common.count == 1
+    for i in (1..possibilities.length - 1)
+      to_check = to_check.product(possibilities[i]).map { |l| l.flatten.sort }.uniq
     end
 
-    return result == length
+    for i in (0..to_check.length - 1)
+      results << combine_possibilities(to_check[i], line)
+    end
+
+    results.reject(&:nil?).uniq.count
+  end
+
+  def recursive()
+
+  end
+
+  def combine_possibilities(possibilities, line)
+    result = 0
+    try = ""
+
+    for i in (0..line[:view].length-1) do
+      letters = possibilities.map { |p| p[i] }.reject { |l| l == "?" }.uniq
+      letters = ["."] if letters.empty?
+
+      try += letters.first if letters.count == 1
+    end
+
+    # puts "#{try} #{try.length == line[:view].length && try.match?(/#{line[:sequence_regex]}/)}"
+
+    if try.length == line[:view].length && try.match?(/#{line[:sequence_regex]}/)
+      try
+    else
+      nil
+    end
   end
 end
